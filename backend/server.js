@@ -1,9 +1,11 @@
 const express = require("express");
 const chats = require("./data/data");
 const env = require("dotenv");
+const connectDB = require("./config/db");
 env.config();
 const app = express();
 
+connectDB()
 app.get("/", (req, res) => {
   res.send("API is Running");
 });
