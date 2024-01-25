@@ -4,14 +4,14 @@ const ChatPage = () => {
 
     const [chats, setChats] = useState([])
     
-    const fetchChat = async() => {
-        const {data} = await axios.get('api/chat');;
-          setChats(data)
-    }
+    // const fetchChat = async() => {
+    //     const {data} = await axios.get('api/chat');;
+    //       setChats(data)
+    // }
 
-    useEffect(()=>{
-     fetchChat()
-    },[])
+    // useEffect(()=>{
+    //  fetchChat()
+    // },[])
   return (
     <div>
       <h1>ChatPage</h1>
