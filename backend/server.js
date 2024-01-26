@@ -3,7 +3,9 @@ const chats = require("./data/data");
 const env = require("dotenv");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
-const {errorHandler,notFound} = require("./middleware/errorMidleware")
+const chatRoutes = require("./routes/chatRoutes");
+const { errorHandler, notFound } = require("./middleware/errorMidleware");
+
 env.config();
 const app = express();
 app.use(express.json());
@@ -13,9 +15,10 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/user", userRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.use(notFound);
-app.use(errorHandler)
+app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 
