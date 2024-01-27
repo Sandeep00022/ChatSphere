@@ -7,7 +7,7 @@ import ChatLoading from "./ChatLoading";
 import { getSender } from "../../config/Chatlogics";
 import GroupChatModal from "./GroupChatModal";
 
-const MyChats = () => {
+const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggeduser] = useState();
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
 
@@ -39,8 +39,10 @@ const MyChats = () => {
   useEffect(() => {
     setLoggeduser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-  }, []);
+  }, [fetchAgain]);
 
+  console.log("chats",chats);
+  console.log("logged", loggedUser)
   return (
     <Box
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
@@ -63,15 +65,15 @@ const MyChats = () => {
         alignItems={"center"}
       >
         My Chats
-       <GroupChatModal>
-       <Button
-          display="flex"
-          fontSize={{ base: "17px", md: "10px", lg: " 17px" }}
-          rightIcon={<AddIcon />}
-        >
-          New Group Chat
-        </Button>
-       </GroupChatModal>
+        <GroupChatModal>
+          <Button
+            display="flex"
+            fontSize={{ base: "17px", md: "10px", lg: " 17px" }}
+            rightIcon={<AddIcon />}
+          >
+            New Group Chat
+          </Button>
+        </GroupChatModal>
       </Box>
       <Box
         display={"flex"}
@@ -83,28 +85,30 @@ const MyChats = () => {
         borderRadius={"lg"}
         overflowY={"hidden"}
       >
-        { chats ? <Stack overflowY={"scroll"}>
-
-            {
-              chats.length>0 && chats.map((chat)=> (
-                 <Box onClick={()=>setSelectedChat(chat)}
-                  cursor={"pointer"}
-                  bg={selectedChat === chat ? "#38B2AC":"#E8E8E8"}
-                  color={selectedChat === chat ? "white" : "black"}
-                  px={3}
-                  py={2}
-                  borderRadius="lg"
-                  key={chat._id}
-                 >
-<Text>
-{!chat.isGroupChat ? (getSender(loggedUser, chat.users)) : chat.chatName}
-</Text>
-                 </Box>                
-
-              ))
-            }
-
-        </Stack> : <ChatLoading />}
+        {chats.length && loggedUser ? (
+          <Stack overflowY={"scroll"}>
+            {chats?.map((chat) => (
+              <Box
+                onClick={() => setSelectedChat(chat)}
+                cursor={"pointer"}
+                bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
+                color={selectedChat === chat ? "white" : "black"}
+                px={3}
+                py={2}
+                borderRadius="lg"
+                key={chat._id}
+              >
+                <Text>
+                  {!chat.isGroupChat
+                    ? getSender(loggedUser, chat.users)
+                    : chat.chatName}
+                </Text>
+              </Box>
+            ))}
+          </Stack>
+        ) : (
+          <ChatLoading />
+        )}
       </Box>
     </Box>
   );
