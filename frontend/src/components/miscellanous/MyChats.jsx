@@ -22,7 +22,7 @@ const MyChats = ({ fetchAgain }) => {
       };
 
       const { data } = await axios.get("/api/chat", config);
-      console.log(data);
+      // console.log(data);
       setChats(data);
     } catch (error) {
       toast({
@@ -41,8 +41,8 @@ const MyChats = ({ fetchAgain }) => {
     fetchChats();
   }, [fetchAgain]);
 
-  console.log("chats",chats);
-  console.log("logged", loggedUser)
+  // console.log("chats",chats);
+  // console.log("logged", loggedUser)
   return (
     <Box
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
