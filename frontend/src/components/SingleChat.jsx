@@ -19,7 +19,7 @@ import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 import typingImage from "../animations/typing-gif.gif";
 
-const ENDPOINT = "https://chatsphereapp.onrender.com/";
+const ENDPOINT = "http://localhost:8080/";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {

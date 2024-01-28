@@ -8,15 +8,16 @@ const messageRoutes = require("./routes/messageRoutes");
 const { errorHandler, notFound } = require("./middleware/errorMidleware");
 const cors = require("cors");
 
+env.config();
+const app = express();
+app.use(express.json());
+
 app.use(
   cors({
     origin: "*",
   })
 );
 
-env.config();
-const app = express();
-app.use(express.json());
 connectDB();
 app.get("/", (req, res) => {
   res.send("API is Running");
@@ -31,7 +32,7 @@ app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 
-const server = app.listen(port, () => {
+const server = app.listen(8080, () => {
   console.log(`your port is running at ${port}`);
 });
 
@@ -41,7 +42,7 @@ const io = require("socket.io")(server, {
   },
 });
 
-console.log(io);
+
 
 io.on("connection", (socket) => {
   console.log("conneted to socket");
