@@ -35,6 +35,7 @@ const Login = () => {
     }
 
     try {
+      setLoading(true);
       const config = {
         headers: {
           "Content-type": "application/json",

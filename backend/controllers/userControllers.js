@@ -40,18 +40,23 @@ const registerUser = async (req, res) => {
 const authUser = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  try {
+    const user = await User.findOne({ email });
 
-  if (user && (await user.matchPassword(password))) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      pic: user.pic,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.send("Invalid Email or Password");
+    if (user && (await user.matchPassword(password))) {
+      res.status(200).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        pic: user.pic,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(401).json({ error: "Invalid Email or Password" });
+    }
+  } catch (error) {
+    console.error("Error in authentication:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
