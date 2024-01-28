@@ -10,11 +10,12 @@ import GroupChatModal from "./GroupChatModal";
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggeduser] = useState();
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const toast = useToast();
 
   const fetchChats = async () => {
     try {
+      setLoading(true);
       const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -34,6 +35,7 @@ const MyChats = ({ fetchAgain }) => {
         isClosable: "true",
         position: "top",
       });
+      setLoading(false)
     }
   };
 
@@ -88,8 +90,10 @@ const MyChats = ({ fetchAgain }) => {
         borderRadius={"lg"}
         overflowY={"hidden"}
       >
-        {chats.length == 0 && (
-          <Text fontSize={"20px"}>Click on Search User Option to add person in Chat</Text>
+        {chats.length == 0 && !loading && (
+          <Text fontSize={"20px"}>
+            Click on Search User Option to add person in Chat
+          </Text>
         )}
         {chats.length && loggedUser ? (
           <Stack overflowY={"scroll"}>

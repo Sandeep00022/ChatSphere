@@ -68,6 +68,7 @@ const Login = () => {
         isCloseable: true,
         position: "bottom",
       });
+      setLoading(false);
     }
   };
 

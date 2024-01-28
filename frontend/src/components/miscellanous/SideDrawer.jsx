@@ -28,8 +28,6 @@ import axios from "axios";
 import ChatLoading from "./ChatLoading";
 import UserList from "../userAvatar/UserList";
 import { getSender } from "../../config/Chatlogics";
-import {Effect} from 'react-notification-badge'
-import NotificationBadge from "react-notification-badge/lib/components/NotificationBadge"
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
@@ -131,70 +129,59 @@ const SideDrawer = () => {
   return (
     <>
       <Box
-        display={"flex"}
-        justifyContent={"space-between"}
-        alignItems={"center"}
         bg="white"
-        w="100%"
-        p="5px 10px 5px 10px"
+        p="10px"
         borderWidth="5px"
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
       >
-        <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
-          <Button onClick={onOpen} variant={"ghost"}>
-            <i className="fas fa-search"></i>
-            <Text d={{ base: "none", md: "flex" }} px="4">
-              Search User
-            </Text>
-          </Button>
-        </Tooltip>
-        <Text fontSize="2xl" fontFamily={"work sans"}>
+        <Button onClick={onOpen} variant="ghost" mr="2">
+          <i className="fas fa-search"></i>
+          <Text d={{ base: "none", md: "flex" }} px="2" fontSize="sm">
+            Search User
+          </Text>
+        </Button>
+        <Text fontSize="lg" fontFamily="work sans">
           Sphere Chat
         </Text>
-        <div>
-          <Menu>
-            <MenuButton pr={2}>
-              <NotificationBadge
-              count={notification.length}
-              effect={Effect}
-              />
-              <BellIcon fontSize="2xl" />
-            </MenuButton>
-            <MenuList pl={2}>
-              {!notification.length && "No New Messages"}
-              {notification.map((notif) => (
-                <MenuItem
-                  onClick={() => {
-                    setSelectedChat(notif.chat);
-                    setNotification(
-                      notification.filter((fil) => fil !== notif)
-                    );
-                  }}
-                  key={notif._id}
-                >
-                  {notif.chat.isGroupChat
-                    ? `New Message: ${notif.chat.chatName}`
-                    : `New message from ${getSender(user, notif.chat.users)}`}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-          <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              <Avatar
-                size={"sm"}
-                cursor={"pointer"}
-                name={user.name}
-                src={user.pic}
-              />
-            </MenuButton>
-            <MenuList>
-              <ProfileModal user={user}>
-                <MenuItem> My Profile</MenuItem>
-              </ProfileModal>
-              <MenuItem onClick={logoutHandler}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
-        </div>
+        <Menu>
+          <MenuButton>
+            <BellIcon fontSize="xl" />
+          </MenuButton>
+          <MenuList>
+            {!notification.length && <MenuItem>No New Messages</MenuItem>}
+            {notification.map((notif) => (
+              <MenuItem
+                key={notif._id}
+                onClick={() => {
+                  setSelectedChat(notif.chat);
+                  setNotification(notification.filter((fil) => fil !== notif));
+                }}
+              >
+                {notif.chat.isGroupChat
+                  ? `New Message: ${notif.chat.chatName}`
+                  : `New message from ${getSender(user, notif.chat.users)}`}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+        <Menu>
+          <MenuButton>
+            <Avatar
+              size="sm"
+              cursor="pointer"
+              name={user.name}
+              src={user.pic}
+            />
+          </MenuButton>
+          <MenuList>
+            <ProfileModal user={user}>
+              <MenuItem>My Profile</MenuItem>
+            </ProfileModal>
+            <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+          </MenuList>
+        </Menu>
       </Box>
 
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
