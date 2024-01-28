@@ -31,7 +31,7 @@ app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 
-const server = app.listen(8080, () => {
+const server = app.listen(port, () => {
   console.log(`your port is running at ${port}`);
 });
 
