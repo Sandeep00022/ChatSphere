@@ -152,7 +152,7 @@ const SideDrawer = () => {
         </Text>
         <div>
           <Menu>
-            <MenuButton>
+            <MenuButton pr={2}>
               <NotificationBadge
               count={notification.length}
               effect={Effect}
