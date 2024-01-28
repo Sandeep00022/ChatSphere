@@ -19,7 +19,7 @@ import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 import typingImage from "../animations/typing-gif.gif";
 
-const ENDPOINT = "http://localhost:8080/";
+const ENDPOINT = "http://localhost:8080";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -155,7 +155,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     });
   });
 
-
   return (
     <>
       {selectedChat ? (
@@ -228,7 +227,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 ""
               )}
               <Input
-              mt={3}
+                mt={3}
                 variant={"filled"}
                 bg="#E0E0E0"
                 placeholder="Enter a message.."
