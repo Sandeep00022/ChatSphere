@@ -33,7 +33,14 @@ const SideDrawer = () => {
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
 
-  const { user, chats, setChats, setSelectedChat } = ChatState();
+  const {
+    user,
+    chats,
+    setChats,
+    setSelectedChat,
+    notification,
+    setNotification,
+  } = ChatState();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -51,7 +58,7 @@ const SideDrawer = () => {
         isClosable: "true",
         position: "top",
       });
-      return
+      return;
     }
     try {
       setLoading(true);
@@ -62,7 +69,7 @@ const SideDrawer = () => {
       };
 
       const { data } = await axios.get(`/api/user?search=${search}`, config);
-      console.log(data)
+      console.log(data);
       if (data.length === 0) {
         toast({
           title: "user not exist",
@@ -71,7 +78,7 @@ const SideDrawer = () => {
           isClosable: "true",
           position: "top",
         });
-        setLoading(false)
+        setLoading(false);
         return;
       }
       setLoading(false);
@@ -88,33 +95,33 @@ const SideDrawer = () => {
     }
   };
 
-  const accessChat = async(userId) =>{
-          try {
-            setLoadingChat(true)
+  const accessChat = async (userId) => {
+    try {
+      setLoadingChat(true);
 
-            const config = {
-              headers:{
-               "Content-Type": "application/json",
-               Authorization: `Bearer ${user.token}`,
-              }
-            };
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
 
-            const {data} = await axios.post('/api/chat',{userId},config);
-            if(!chats.find((c)=> c._id === data._id)) setChats([data,...chats])
-             setSelectedChat(data);
-             setLoadingChat(false);
-             onClose();
-          } catch (error) {
-            toast({
-              title: "Error fetching the chat",
-              description: error.message,
-              status: "error",
-              duration: 5000,
-              isClosable: "true",
-              position: "top",
-            });
-          }
-  }
+      const { data } = await axios.post("/api/chat", { userId }, config);
+      if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+      setSelectedChat(data);
+      setLoadingChat(false);
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Error fetching the chat",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: "true",
+        position: "top",
+      });
+    }
+  };
 
   // console.log(searchresult);
   return (
@@ -144,7 +151,17 @@ const SideDrawer = () => {
             <MenuButton>
               <BellIcon fontSize="2xl" />
             </MenuButton>
-            {/* <MenuList></MenuList> */}
+            <MenuList pl={2}>
+              {
+                !notification.length  && "No New Messages"
+              }
+              {
+                notification.map((notif)=> (
+                  <MenuItem>
+                  </MenuItem>
+                ))
+              }
+            </MenuList>
           </Menu>
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
@@ -179,14 +196,15 @@ const SideDrawer = () => {
               />
               <Button onClick={handleSearch}>Go</Button>
             </Box>
-            {loading ? <ChatLoading /> : (
-              searchresult?.map((user)=>(
+            {loading ? (
+              <ChatLoading />
+            ) : (
+              searchresult?.map((user) => (
                 <UserList
-                key={user._id}
-                user={user}
-                handleFunction ={()=> accessChat(user._id)}
+                  key={user._id}
+                  user={user}
+                  handleFunction={() => accessChat(user._id)}
                 />
-
               ))
             )}
             {loadingChat && <Spinner ml={"auto"} display={"flex"} />}
