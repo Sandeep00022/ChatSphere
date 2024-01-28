@@ -155,9 +155,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     });
   });
 
-  console.log('====================================');
-  console.log("notifi", notification);
-  console.log('====================================');
+
   return (
     <>
       {selectedChat ? (
@@ -230,6 +228,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 ""
               )}
               <Input
+              mt={3}
                 variant={"filled"}
                 bg="#E0E0E0"
                 placeholder="Enter a message.."

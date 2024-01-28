@@ -43,10 +43,11 @@ const ProfileModal = ({ user, children }) => {
             alignItems={"center"}
           >
             <Image
-              borderRadius={"full"}
+              borderRadius="full"
               boxSize="150px"
               src={user.pic}
               alt={user.name}
+              objectFit="cover" 
             />
             <Text fontSize={{ base: "28px", md: "30px" }}>
               Email: {user.email}
