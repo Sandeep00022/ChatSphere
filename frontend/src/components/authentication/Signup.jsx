@@ -26,11 +26,11 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleClick = () => setShow(!show);
-  const {baseUrl} = ChatState();
+  const {baseUrl} = ChatState
 
   const postDetails = (pics) => {
     setLoading(true);
-    //  console.log(pics)
+   
     if (pics === undefined) {
       toast({
         title: "Please Select an Image",
@@ -47,14 +47,14 @@ const Signup = () => {
       data.append("file", pics);
       data.append("upload_preset", "chat-app");
       data.append("cloud_name", "dhj8hmcld");
-      // console.log("data", pics);
+     
       fetch("https://api.cloudinary.com/v1_1/dhj8hmcld/image/upload", {
         method: "POST",
         body: data,
       })
         .then((res) => res.json())
         .then((data) => {
-          // console.log(data);
+         
           setPic(data.url.toString());
           setLoading(false);
         })
@@ -121,7 +121,7 @@ const Signup = () => {
         isCloseable: true,
         position: "bottom",
       });
-      console.log(data);
+      
       localStorage.setItem("userData", JSON.stringify(data));
       setLoading(false);
       navigate("/chat");

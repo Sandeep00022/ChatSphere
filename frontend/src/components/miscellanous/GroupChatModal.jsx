@@ -29,7 +29,7 @@ const GroupChatModal = ({ children }) => {
   const toast = useToast();
 
   const { baseUrl,user, chats, setChats } = ChatState();
-  // console.log(chats)
+ 
   const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {
@@ -45,7 +45,7 @@ const GroupChatModal = ({ children }) => {
       };
 
       const { data } = await axios.get(`${baseUrl}/api/user?search=${search}`, config);
-      console.log(data);
+      
       setLoading(false);
       setSearchResult(data);
     } catch (error) {

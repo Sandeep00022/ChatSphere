@@ -2,44 +2,12 @@ const Chat = require("../models/chatModel");
 const Message = require("../models/messageModel");
 const User = require("../models/userModel");
 
-// const sendMessage = async (req, res) => {
-//   const { content, chatId } = req.body;
 
-//   if (!content || !chatId) {
-//     console.log("Invalid data passed into request");
-//     return res.sendStatus(400);
-//   }
-
-//   var newMessage = {
-//     sender: req.user._id,
-//     content: content,
-//     chat: chatId,
-//   };
-//   console.log("hello from api");
-//   try {
-//     var message = await Message.create(newMessage);
-//     message = await message.populate("sender", "name pic");
-//     message = await message.populate("chat");
-//     message = await User.popualte(message, {
-//       path: "chat.users",
-//       select: "name pic email",
-//     });
-
-//     await Chat.findByIdAndUpdate(req.body.chatId, {
-//       latestMessage: message,
-//     });
-
-//     res.json(message);
-//   } catch (error) {
-//     res.status(400);
-//     throw new Error(error.messasge);
-//   }
-// };
 const sendMessage = async (req, res) => {
   const { content, chatId } = req.body;
 
   if (!content || !chatId) {
-    console.log("Invalid data passed into request");
+  
     return res.sendStatus(400);
   }
 
@@ -49,7 +17,7 @@ const sendMessage = async (req, res) => {
     chat: chatId,
   };
 
-  console.log("hello from api");
+  
 
   try {
     var message = await Message.create(newMessage);

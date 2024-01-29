@@ -25,7 +25,7 @@ const MyChats = ({ fetchAgain }) => {
         `${baseUrl}/api/chat`,
         config
       );
-      // console.log(data);
+     
       setChats(data);
     } catch (error) {
       toast({
@@ -44,8 +44,7 @@ const MyChats = ({ fetchAgain }) => {
     fetchChats();
   }, [fetchAgain]);
 
-  // console.log("chats",chats);
-  // console.log("logged", loggedUser)
+ 
   return (
     <Box
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}

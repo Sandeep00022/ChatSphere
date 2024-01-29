@@ -11,7 +11,7 @@ import { Avatar, Box, Tooltip } from "@chakra-ui/react";
 
 const ScrollableChat = ({ messages }) => {
   const { user } = ChatState();
-  console.log(messages);
+ 
   return (
     <Box overflowY={"auto"}>
       {messages &&

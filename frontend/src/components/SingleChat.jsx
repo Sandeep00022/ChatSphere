@@ -76,7 +76,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
-  console.log("end", ENDPOINT);
+
   const sendMessage = async (e) => {
     if (e.key === "Enter" && newMessage) {
       socket.emit("stop typing", selectedChat._id);

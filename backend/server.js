@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
   console.log("conneted to socket");
   socket.on("setup", (userData) => {
     socket.join(userData._id);
-    console.log(userData._id);
+   
     socket.emit("connected");
   });
 

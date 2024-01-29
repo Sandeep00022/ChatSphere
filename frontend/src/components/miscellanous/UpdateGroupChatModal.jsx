@@ -35,7 +35,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
   const toast = useToast();
 
   const handleAddUser = async (user1) => {
-    console.log(user1);
+  
     if (selectedChat.users.find((u) => u._id === user1._id)) {
       return toast({
         title: "User already in group",
@@ -192,7 +192,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
       };
 
       const { data } = await axios.get(`${baseUrl}/api/user?search=${search}`, config);
-      console.log(data);
+      
       setLoading(false);
       setSearchResult(data);
     } catch (error) {

@@ -76,7 +76,7 @@ const SideDrawer = () => {
         `${baseUrl}/api/user?search=${search}`,
         config
       );
-      console.log(data);
+    
       if (data.length === 0) {
         toast({
           title: "user not exist",
@@ -134,7 +134,7 @@ const SideDrawer = () => {
     }
   };
 
-  // console.log(searchresult);
+
   return (
     <>
       <Box
