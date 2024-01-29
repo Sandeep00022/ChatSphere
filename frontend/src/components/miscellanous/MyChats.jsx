@@ -9,23 +9,24 @@ import GroupChatModal from "./GroupChatModal";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggeduser] = useState();
-  const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
-  const [loading, setLoading] = useState(false);
+  const { baseUrl,selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
+
   const toast = useToast();
 
   const fetchChats = async () => {
     try {
-      setLoading(true);
       const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       };
 
-      const { data } = await axios.get("/api/chat", config);
+      const { data } = await axios.get(
+        `${baseUrl}/api/chat`,
+        config
+      );
       // console.log(data);
       setChats(data);
-      setLoading(false);
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -35,7 +36,6 @@ const MyChats = ({ fetchAgain }) => {
         isClosable: "true",
         position: "top",
       });
-      setLoading(false)
     }
   };
 
@@ -81,8 +81,6 @@ const MyChats = ({ fetchAgain }) => {
       <Box
         display={"flex"}
         flexDir={"column"}
-        justifyContent={chats.length === 0 ? "center" : ""}
-        alignItems={chats.length === 0 ? "center" : ""}
         p={3}
         bg={"#F8F8F8"}
         w={"100%"}
@@ -90,11 +88,6 @@ const MyChats = ({ fetchAgain }) => {
         borderRadius={"lg"}
         overflowY={"hidden"}
       >
-        {chats.length == 0 && !loading && (
-          <Text fontSize={"20px"}>
-            Click on Search User Option to add person in Chat
-          </Text>
-        )}
         {chats.length && loggedUser ? (
           <Stack overflowY={"scroll"}>
             {chats?.map((chat) => (
@@ -117,7 +110,7 @@ const MyChats = ({ fetchAgain }) => {
             ))}
           </Stack>
         ) : (
-          loading && <ChatLoading />
+          <ChatLoading />
         )}
       </Box>
     </Box>

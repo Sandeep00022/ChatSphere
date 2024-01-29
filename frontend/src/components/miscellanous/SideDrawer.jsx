@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   Drawer,
@@ -19,7 +20,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { ChatState } from "../../context/ChatProvider";
 import ProfileModal from "./ProfileModal";
@@ -36,6 +37,7 @@ const SideDrawer = () => {
   const [loadingChat, setLoadingChat] = useState(false);
 
   const {
+    baseUrl,
     user,
     chats,
     setChats,
@@ -70,7 +72,10 @@ const SideDrawer = () => {
         },
       };
 
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+      const { data } = await axios.get(
+        `${baseUrl}/api/user?search=${search}`,
+        config
+      );
       console.log(data);
       if (data.length === 0) {
         toast({
@@ -108,7 +113,11 @@ const SideDrawer = () => {
         },
       };
 
-      const { data } = await axios.post("/api/chat", { userId }, config);
+      const { data } = await axios.post(
+        `${baseUrl}/api/chat`,
+        { userId },
+        config
+      );
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data);
       setLoadingChat(false);
@@ -147,7 +156,16 @@ const SideDrawer = () => {
         </Text>
         <Menu>
           <MenuButton>
-            <BellIcon fontSize="xl" />
+            <Badge
+              colorScheme={notification.length > 0 ? "red" : "gray"}
+              borderRadius="full"
+              px="2"
+              py="1"
+              fontSize="sm"
+            >
+              <BellIcon fontSize="xl" />
+              {notification.length > 0 && notification.length}
+            </Badge>
           </MenuButton>
           <MenuList>
             {!notification.length && <MenuItem>No New Messages</MenuItem>}
@@ -156,7 +174,17 @@ const SideDrawer = () => {
                 key={notif._id}
                 onClick={() => {
                   setSelectedChat(notif.chat);
-                  setNotification(notification.filter((fil) => fil !== notif));
+                  // Filter out the clicked notification from the state
+                  const updatedNotifications = notification.filter(
+                    (fil) => fil !== notif
+                  );
+                  setNotification(updatedNotifications);
+
+                  // Update local storage with the filtered notifications
+                  localStorage.setItem(
+                    "notifications",
+                    JSON.stringify(updatedNotifications)
+                  );
                 }}
               >
                 {notif.chat.isGroupChat

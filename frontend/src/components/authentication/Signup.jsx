@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ChatState } from "../../context/ChatProvider";
 
 const Signup = () => {
   const [show, setShow] = useState(false);
@@ -25,6 +26,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleClick = () => setShow(!show);
+  const {baseUrl} = ChatState();
 
   const postDetails = (pics) => {
     setLoading(true);
@@ -107,7 +109,7 @@ const Signup = () => {
       };
 
       const { data } = await axios.post(
-        "api/user",
+        `${baseUrl}/api/user`,
         { name, password, pic, email },
         config
       );

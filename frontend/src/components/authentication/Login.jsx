@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ChatState } from "../../context/ChatProvider";
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -19,6 +20,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
+  const {baseUrl} = ChatState();
 
   const handleClick = () => setShow(!show);
 
@@ -42,7 +44,7 @@ const Login = () => {
         },
       };
 
-      const { data } = await axios.post("/api/user/login", {
+      const { data } = await axios.post(`${baseUrl}/api/user/login`, {
         email,
         password,
         config,

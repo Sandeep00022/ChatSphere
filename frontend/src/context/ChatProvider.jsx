@@ -1,13 +1,33 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 const ChatContext = createContext();
+
+const baseUrl = "https://mychatappp.onrender.com"
 
 const ChatProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState([]);
-  const [notification, setNotification] = useState([]);
+  const [notification, setNotification] = useState(
+    JSON.parse(localStorage.getItem("notifications")) || []
+  );
+  const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
+
+  const contentRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (contentRef.current) {
+      contentRef.current.scrollTop = contentRef.current.scrollHeight;
+      setIsScrolledToBottom(true);
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -21,6 +41,10 @@ const ChatProvider = ({ children }) => {
   return (
     <ChatContext.Provider
       value={{
+        baseUrl,
+        isScrolledToBottom,
+        scrollToBottom,
+        contentRef,
         user,
         setUser,
         selectedChat,

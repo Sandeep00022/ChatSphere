@@ -7,13 +7,13 @@ import {
   isdSameUser,
 } from "../config/Chatlogics";
 import { ChatState } from "../context/ChatProvider";
-import { Avatar, Tooltip } from "@chakra-ui/react";
+import { Avatar, Box, Tooltip } from "@chakra-ui/react";
 
 const ScrollableChat = ({ messages }) => {
   const { user } = ChatState();
   console.log(messages);
   return (
-    <ScrollableFeed>
+    <Box overflowY={"auto"}>
       {messages &&
         messages.map((m, i) => (
           <div style={{ display: "flex" }} key={m._id}>
@@ -39,14 +39,14 @@ const ScrollableChat = ({ messages }) => {
                 padding: "5px 15px",
                 maxWidth: "75%",
                 marginLeft: isSameSenderMargin(messages, m, i, user._id),
-                marginTop: isdSameUser(messages, m, i, user._id) ? 3: 10
+                marginTop: isdSameUser(messages, m, i, user._id) ? 3 : 10,
               }}
             >
               {m.content}
             </span>
           </div>
         ))}
-    </ScrollableFeed>
+    </Box>
   );
 };
 

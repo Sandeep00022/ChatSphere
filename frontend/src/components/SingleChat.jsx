@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ChatState } from "../context/ChatProvider";
 import {
   Box,
@@ -31,8 +31,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [isTyping, setIsTyping] = useState(false);
 
   const toast = useToast();
-  const { user, selectedChat, setSelectedChat, notification, setNotification } =
-    ChatState();
+  const {
+    baseUrl,
+    isScrolledToBottom,
+    contentRef,
+    scrollToBottom,
+    user,
+    selectedChat,
+    setSelectedChat,
+    notification,
+    setNotification,
+  } = ChatState();
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -46,7 +55,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setLoading(true);
 
       const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
+        ` ${baseUrl}/api/message/${selectedChat._id}`,
         config
       );
 
@@ -67,6 +76,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
+  console.log("end", ENDPOINT);
   const sendMessage = async (e) => {
     if (e.key === "Enter" && newMessage) {
       socket.emit("stop typing", selectedChat._id);
@@ -80,7 +90,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
         setNewMessage("");
         const { data } = await axios.post(
-          `/api/message`,
+          `${baseUrl}/api/message`,
           {
             content: newMessage,
             chatId: selectedChat._id,
@@ -90,6 +100,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
         socket.emit("new message", data);
         setMessages([...messages, data]);
+        scrollToBottom();
       } catch (error) {
         toast({
           title: "Error Occured!",
@@ -131,7 +142,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
-  }, []);
+    scrollToBottom();
+  }, [isScrolledToBottom]);
 
   useEffect(() => {
     fetchMessages();
@@ -139,6 +151,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [selectedChat]);
 
   useEffect(() => {
+    const storedNotifications =
+      JSON.parse(localStorage.getItem("notifications")) || [];
+     setNotification(storedNotifications);
     socket.on("message recieved", (newMessageRecieved) => {
       if (
         !selectedChatCompare ||
@@ -146,14 +161,26 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       ) {
         // notification
         if (!notification.includes(newMessageRecieved)) {
-          setNotification([newMessageRecieved, ...notification]);
-          setFetchAgain(!fetchAgain);
+          const updatedNotifications = [newMessageRecieved, ...notification];
+          setNotification(updatedNotifications);
+          // Save updated notifications to local storage
+          localStorage.setItem(
+            "notifications",
+            JSON.stringify(updatedNotifications)
+          );
         }
       } else {
         setMessages([...messages, newMessageRecieved]);
       }
     });
   });
+
+  useEffect(() => {
+    // Scroll to the bottom of the contentRef after rendering
+    if (contentRef.current) {
+      contentRef.current.scrollTop = contentRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   return (
     <>
@@ -199,7 +226,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             w={"100%"}
             h={"100%"}
             borderRadius={"lg"}
-            overflowY={"hidden"}
+            overflowY={"scroll"}
           >
             {/* mesage here */}
             {loading ? (
@@ -212,7 +239,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               />
             ) : (
               <>
-                <div className="message">
+                <div
+                  ref={contentRef}
+                  style={{ overflowY: "scroll" }}
+                  className="message"
+                >
                   <ScrollableChat messages={messages} />
                 </div>
               </>
