@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { ChatState } from "../context/ChatProvider";
 import {
   Box,
+  Button,
   FormControl,
   IconButton,
   Image,
@@ -10,7 +11,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../config/Chatlogics";
 import ProfileModal from "./miscellanous/ProfileModal";
 import UpdateGroupChatModal from "./miscellanous/UpdateGroupChatModal";
@@ -76,9 +77,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
-
   const sendMessage = async (e) => {
-    if (e.key === "Enter" && newMessage) {
+    console.log(e.type);
+    if (e.key === "Enter" || (e.type === "click" && newMessage)) {
       socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
@@ -153,7 +154,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   useEffect(() => {
     const storedNotifications =
       JSON.parse(localStorage.getItem("notifications")) || [];
-     setNotification(storedNotifications);
+    setNotification(storedNotifications);
     socket.on("message recieved", (newMessageRecieved) => {
       if (
         !selectedChatCompare ||
@@ -173,7 +174,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setMessages([...messages, newMessageRecieved]);
       }
     });
-  });
+  }, [notification, messages]);
 
   useEffect(() => {
     // Scroll to the bottom of the contentRef after rendering
@@ -257,14 +258,24 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               ) : (
                 ""
               )}
-              <Input
-                mt={3}
-                variant={"filled"}
-                bg="#E0E0E0"
-                placeholder="Enter a message.."
-                onChange={typingHandler}
-                value={newMessage}
-              />
+              <Box
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                {" "}
+                <Input
+                  mt={3}
+                  variant={"filled"}
+                  bg="#E0E0E0"
+                  placeholder="Enter a message.."
+                  onChange={typingHandler}
+                  value={newMessage}
+                />
+                {newMessage && <Button  colorScheme="green" onClick={sendMessage} mt={3}>
+                  <ArrowRightIcon />
+                </Button>}
+              </Box>
             </FormControl>
           </Box>
         </>
