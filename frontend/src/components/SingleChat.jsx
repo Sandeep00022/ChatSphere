@@ -7,8 +7,16 @@ import {
   IconButton,
   Image,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   Text,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { ArrowBackIcon, ArrowRightIcon } from "@chakra-ui/icons";
@@ -19,6 +27,8 @@ import axios from "axios";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 import typingImage from "../animations/typing-gif.gif";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 const ENDPOINT = "https://mychatappp.onrender.com/";
 var socket, selectedChatCompare;
@@ -30,6 +40,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
 
   const toast = useToast();
   const {
@@ -43,6 +54,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     notification,
     setNotification,
   } = ChatState();
+
+  // emoji logic
+
+  const handleEmojiSelect = (emoji) => {
+    newMessage
+      ? setNewMessage(newMessage + emoji.native)
+      : setNewMessage(emoji.native);
+    setShowPicker(!showPicker);
+  };
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -240,6 +260,24 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               />
             ) : (
               <>
+                {showPicker && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      background: "transparent",
+                      zIndex: "1",
+                    }}
+                  >
+                    <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+                  </div>
+                )}
                 <div
                   ref={contentRef}
                   style={{ overflowY: "scroll" }}
@@ -272,9 +310,19 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   onChange={typingHandler}
                   value={newMessage}
                 />
-                {newMessage && <Button  colorScheme="green" onClick={sendMessage} mt={3}>
-                  <ArrowRightIcon />
-                </Button>}
+                <Button
+                 mt={3}
+                 mr={1}
+                  onClick={() => setShowPicker(!showPicker)}
+                  style={{ fontSize: "1.5rem", marginLeft: "0.5rem" }}
+                >
+                  😀
+                </Button>
+                {newMessage && (
+                  <Button colorScheme="green" onClick={sendMessage} mt={3}>
+                    <ArrowRightIcon />
+                  </Button>
+                )}
               </Box>
             </FormControl>
           </Box>

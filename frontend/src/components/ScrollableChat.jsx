@@ -14,6 +14,7 @@ const ScrollableChat = ({ messages }) => {
  
   return (
     <Box overflowY={"auto"}>
+      
       {messages &&
         messages.map((m, i) => (
           <div style={{ display: "flex" }} key={m._id}>
